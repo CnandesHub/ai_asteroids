@@ -1,40 +1,43 @@
-# Example file showing a triangle moving on screen
 import pygame
+from ship import Ship
+from asteroid import Asteroid
+
+WIDTH = 800
+HEIGHT = 600
+TARGET_FPS = 60
+
 
 def main():
-    # pygame setup
     pygame.init()
-    screen = pygame.display.set_mode((1280, 720))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Asteroids")
+
+    ship1 = Ship(screen, WIDTH / 2, HEIGHT / 2, 0.8, 30)
+    astr = Asteroid(screen, 0, 0, 1, 30, 30)
+
     clock = pygame.time.Clock()
     running = True
     dt = 0
-
-    player_pos = pygame.Vector2(0, 0)
 
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        screen.fill("purple")
+        screen.fill("black")
 
-        pygame.draw.polygon(screen, "red", [(player_pos.x, player_pos.y + 40), (player_pos.x - 40, player_pos.y - 40), (player_pos.x + 40, player_pos.y - 40)])
+        ship1.update(dt)
+        ship1.draw()
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
-            player_pos.y -= 300 * dt
-        if keys[pygame.K_s]:
-            player_pos.y += 300 * dt
-        if keys[pygame.K_a]:
-            player_pos.x -= 300 * dt
-        if keys[pygame.K_d]:
-            player_pos.x += 300 * dt
+        astr.update(dt)
+        astr.draw()
 
         pygame.display.flip()
 
-        dt = clock.tick(60) / 1000
+        dt = clock.tick(60) / 1000.0
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()

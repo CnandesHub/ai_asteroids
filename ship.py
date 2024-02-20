@@ -7,7 +7,8 @@ class Ship(Entity):
     TURN_SPEED = 10
 
     def __init__(self, screen, x, y, acceleration, size=20):
-        super().__init__(screen, x, y, acceleration)
+        super().__init__(screen, x, y)
+        self.acceleration = acceleration
         self.size = size
         self.SCREEN_WIDTH = screen.get_width()
         self.SCREEN_HEIGHT = screen.get_height()

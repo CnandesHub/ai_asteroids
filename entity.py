@@ -1,9 +1,8 @@
 class Entity:
 
-    def __init__(self, screen, x, y, acceleration):
+    def __init__(self, screen, x, y):
         self.x = x
         self.y = y
-        self.acceleration = acceleration
         self.angle = 0
         self.screen = screen
         self.speed_x = 0
