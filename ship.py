@@ -66,23 +66,21 @@ class Ship(Entity):
         # points = self.calculate_points()
         # pygame.draw.polygon(self.screen, (255, 255, 255), points)
 
-        # Draw a circle
-        circle_center = (self.x, self.y)
-        circle_radius = self.size
-        pygame.draw.circle(self.screen, (255, 0, 0), circle_center, circle_radius)
+        for y in range(-1, 2):
+            for x in range(-1, 2):
+                offset_x = x * self.SCREEN_WIDTH
+                offset_y = y * self.SCREEN_HEIGHT
 
-        ship_circle_distance = 20
-        pygame.draw.circle(
-            self.screen,
-            (0, 255, 255),
-            (
-                self.x + math.cos(self.angle) * ship_circle_distance,
-                self.y + math.sin(self.angle) * ship_circle_distance,
-            ),
-            5,
-        )
+                circle_center = (self.x + offset_x, self.y + offset_y)
+                pygame.draw.circle(self.screen, (255, 0, 0), circle_center, self.size)
 
-        font = pygame.font.Font(None, 36)
-        text = f"Vel_x:{self.speed_x:.2f} Vel_y:{self.speed_y:.2f} Acc:{self.acceleration} Angle:{self.angle:.2f}"
-        text_surface = font.render(text, True, (255, 255, 255))
-        self.screen.blit(text_surface, (0, 0))
+                ship_circle_distance = 20
+                pygame.draw.circle(
+                    self.screen,
+                    (0, 255, 255),
+                    (
+                        self.x + offset_x + math.cos(self.angle) * ship_circle_distance,
+                        self.y + offset_y + math.sin(self.angle) * ship_circle_distance,
+                    ),
+                    5,
+                )
