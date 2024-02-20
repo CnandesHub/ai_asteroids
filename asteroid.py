@@ -5,11 +5,10 @@ import math
 
 class Asteroid(Entity):
 
-    def __init__(self, screen, x, y, speed, angle, size=20):
-        super().__init__(screen, x, y)
+    def __init__(self, screen, x, y, size, speed, angle):
+        super().__init__(screen, x, y, size)
         self.speed_x = speed * math.cos(angle)
-        self.speed_y = speed * math.cos(angle)
-        self.size = size
+        self.speed_y = speed * math.sin(angle)
         self.SCREEN_WIDTH = screen.get_width()
         self.SCREEN_HEIGHT = screen.get_height()
         self.max_speed = 10

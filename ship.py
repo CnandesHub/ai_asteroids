@@ -6,10 +6,9 @@ import math
 class Ship(Entity):
     TURN_SPEED = 10
 
-    def __init__(self, screen, x, y, acceleration, size=20):
-        super().__init__(screen, x, y)
+    def __init__(self, screen, x, y, size, acceleration):
+        super().__init__(screen, x, y, size)
         self.acceleration = acceleration
-        self.size = size
         self.SCREEN_WIDTH = screen.get_width()
         self.SCREEN_HEIGHT = screen.get_height()
         self.max_speed = 10
@@ -30,17 +29,10 @@ class Ship(Entity):
             self.angle -= self.TURN_SPEED * dt
 
         self.angle %= 2 * math.pi
-        if math.sqrt(self.speed_x**2 + self.speed_y**2) > self.max_speed:
-            self.speed_x = (
-                self.speed_x
-                / math.sqrt(self.speed_x**2 + self.speed_y**2)
-                * self.max_speed
-            )
-            self.speed_y = (
-                self.speed_y
-                / math.sqrt(self.speed_x**2 + self.speed_y**2)
-                * self.max_speed
-            )
+        hipotenusa = math.sqrt(self.speed_x**2 + self.speed_y**2)
+        if hipotenusa > self.max_speed:
+            self.speed_x = self.speed_x / hipotenusa * self.max_speed
+            self.speed_y = self.speed_y / hipotenusa * self.max_speed
 
         dx = self.speed_x * dt * self.TARGET_FPS
         dy = self.speed_y * dt * self.TARGET_FPS

@@ -12,8 +12,8 @@ def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Asteroids")
 
-    ship1 = Ship(screen, WIDTH / 2, HEIGHT / 2, 0.8, 30)
-    astr = Asteroid(screen, 0, 0, 1, 120, 50)
+    ship1 = Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 0.8)
+    astr = Asteroid(screen=screen, x=0, y=0, size=80, speed=10, angle=1.35)
 
     clock = pygame.time.Clock()
     running = True
