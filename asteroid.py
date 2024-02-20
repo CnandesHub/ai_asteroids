@@ -5,8 +5,8 @@ import math
 
 class Asteroid(Entity):
 
-    def __init__(self, screen, x, y, size, speed, angle):
-        super().__init__(screen, x, y, size)
+    def __init__(self, screen, x, y, radius, speed, angle):
+        super().__init__(screen, x, y, radius)
         self.speed_x = speed * math.cos(angle)
         self.speed_y = speed * math.sin(angle)
         self.SCREEN_WIDTH = screen.get_width()
@@ -30,4 +30,4 @@ class Asteroid(Entity):
                 offset_y = y * self.SCREEN_HEIGHT
 
                 circle_center = (self.x + offset_x, self.y + offset_y)
-                pygame.draw.circle(self.screen, (255, 0, 0), circle_center, self.size)
+                pygame.draw.circle(self.screen, (255, 0, 0), circle_center, self.radius)

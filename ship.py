@@ -6,8 +6,8 @@ import math
 class Ship(Entity):
     TURN_SPEED = 10
 
-    def __init__(self, screen, x, y, size, acceleration):
-        super().__init__(screen, x, y, size)
+    def __init__(self, screen, x, y, radius, acceleration):
+        super().__init__(screen, x, y, radius)
         self.acceleration = acceleration
         self.SCREEN_WIDTH = screen.get_width()
         self.SCREEN_HEIGHT = screen.get_height()
@@ -49,9 +49,9 @@ class Ship(Entity):
             A list of points defining the ship's shape.
         """
         return [
-            (self.x, self.y - self.size),
-            (self.x - self.size, self.y + self.size),
-            (self.x + self.size, self.y + self.size),
+            (self.x, self.y - self.radius),
+            (self.x - self.radius, self.y + self.radius),
+            (self.x + self.radius, self.y + self.radius),
         ]
 
     def draw(self):
@@ -64,7 +64,7 @@ class Ship(Entity):
                 offset_y = y * self.SCREEN_HEIGHT
 
                 circle_center = (self.x + offset_x, self.y + offset_y)
-                pygame.draw.circle(self.screen, (255, 0, 0), circle_center, self.size)
+                pygame.draw.circle(self.screen, (255, 0, 0), circle_center, self.radius)
 
                 ship_circle_distance = 20
                 pygame.draw.circle(
