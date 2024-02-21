@@ -1,6 +1,7 @@
 from entity import Entity
 import pygame
 import math
+from sensor import Sensor
 
 
 class Ship(Entity):
@@ -12,6 +13,7 @@ class Ship(Entity):
         self.SCREEN_WIDTH = screen.get_width()
         self.SCREEN_HEIGHT = screen.get_height()
         self.max_speed = 10
+        self.sensor = Sensor(self)
 
     def update(self, dt):
 
@@ -40,6 +42,8 @@ class Ship(Entity):
         self.y += dy
         self.x %= self.SCREEN_WIDTH
         self.y %= self.SCREEN_HEIGHT
+
+        self.sensor.update()
 
     def calculate_points(self):
         """
@@ -76,3 +80,4 @@ class Ship(Entity):
                     ),
                     5,
                 )
+        self.sensor.draw()
