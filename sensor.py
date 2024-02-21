@@ -10,7 +10,7 @@ class Sensor:
         self.ray_angle = 2 * math.pi / self.ray_count
         self.rays = []
 
-    def update(self):
+    def _cast_rays(self):
         self.rays = []
         ship_x, ship_y = self.ship.get_position()
         start = (ship_x, ship_y)
@@ -22,6 +22,9 @@ class Sensor:
             )
 
             self.rays.append({"start": start, "end": end})
+
+    def update(self):
+        self._cast_rays()
 
     def draw(self):
         for ray in self.rays:

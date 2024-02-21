@@ -15,8 +15,7 @@ class Ship(Entity):
         self.max_speed = 10
         self.sensor = Sensor(self)
 
-    def update(self, dt):
-
+    def _move_ship(self, dt):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_w]:
@@ -43,25 +42,11 @@ class Ship(Entity):
         self.x %= self.SCREEN_WIDTH
         self.y %= self.SCREEN_HEIGHT
 
+    def update(self, dt):
+        self._move_ship(dt)
         self.sensor.update()
 
-    def calculate_points(self):
-        """
-        Calculate the points of the ship's shape.
-
-        Returns:
-            A list of points defining the ship's shape.
-        """
-        return [
-            (self.x, self.y - self.radius),
-            (self.x - self.radius, self.y + self.radius),
-            (self.x + self.radius, self.y + self.radius),
-        ]
-
     def draw(self):
-        # points = self.calculate_points()
-        # pygame.draw.polygon(self.screen, (255, 255, 255), points)
-
         for y in range(-1, 2):
             for x in range(-1, 2):
                 offset_x = x * self.SCREEN_WIDTH
