@@ -1,6 +1,7 @@
 import pygame
 from ship import Ship
 from asteroid import Asteroid
+from collision_check import CollisionEntityCheck
 
 WIDTH = 800
 HEIGHT = 600
@@ -31,6 +32,9 @@ def main():
 
         astr.update(dt)
         astr.draw()
+
+        if CollisionEntityCheck.check_collision(ship1, astr):
+            print("Collision detected")
 
         pygame.display.flip()
 

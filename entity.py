@@ -15,3 +15,9 @@ class Entity:
 
     def draw(self):
         pass
+
+    def get_position(self):
+        return self.x, self.y
+
+    def get_radius(self):
+        return self.radius
