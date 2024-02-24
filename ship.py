@@ -42,9 +42,9 @@ class Ship(Entity):
         self.x %= self.SCREEN_WIDTH
         self.y %= self.SCREEN_HEIGHT
 
-    def update(self, dt):
+    def update(self, asteroids, dt):
         self._move_ship(dt)
-        self.sensor.update()
+        self.sensor.update(asteroids)
 
     def draw(self):
         for y in range(-1, 2):

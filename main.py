@@ -27,11 +27,10 @@ def main():
 
         screen.fill("black")
 
-        ship1.update(dt)
-        ship1.draw()
-
         astr.update(dt)
         astr.draw()
+        ship1.update([astr], dt)
+        ship1.draw()
 
         if CollisionEntityCheck.check_collision(ship1, astr):
             print("Collision detected")
