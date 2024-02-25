@@ -7,7 +7,7 @@ class Sensor:
     def __init__(self, ship):
         self.ship = ship
         self.ray_count = 16
-        self.ray_length = 200
+        self.ray_length = 150
         self.ray_angle = 2 * math.pi / self.ray_count
         self.rays = []
         self.readings = []
