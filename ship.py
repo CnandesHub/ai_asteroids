@@ -2,31 +2,37 @@ from entity import Entity
 import pygame
 import math
 from sensor import Sensor
+from neural_net import NeuralNetwork
+from controls import Controls
 
 
 class Ship(Entity):
     TURN_SPEED = 10
 
-    def __init__(self, screen, x, y, radius, acceleration):
+    def __init__(self, screen, x, y, radius, acceleration, control_type="Player"):
         super().__init__(screen, x, y, radius)
         self.acceleration = acceleration
         self.SCREEN_WIDTH = screen.get_width()
         self.SCREEN_HEIGHT = screen.get_height()
         self.max_speed = 10
         self.sensor = Sensor(self)
+        self.use_brain = control_type == "AI"
 
-    def _move_ship(self, dt):
-        keys = pygame.key.get_pressed()
+        if self.use_brain:
+            self.brain = NeuralNetwork(self.sensor.ray_count)
 
-        if keys[pygame.K_w]:
+        self.controls = Controls()
+
+    def _move_ship(self, dt, pressed_keys):
+        if "forward" in pressed_keys:
             self.speed_x += math.cos(self.angle) * self.acceleration * dt
             self.speed_y += math.sin(self.angle) * self.acceleration * dt
-        if keys[pygame.K_s]:
+        if "backward" in pressed_keys:
             self.speed_x -= math.cos(self.angle) * self.acceleration * dt
             self.speed_y -= math.sin(self.angle) * self.acceleration * dt
-        if keys[pygame.K_d]:
+        if "right" in pressed_keys:
             self.angle += self.TURN_SPEED * dt
-        if keys[pygame.K_a]:
+        if "left" in pressed_keys:
             self.angle -= self.TURN_SPEED * dt
 
         self.angle %= 2 * math.pi
@@ -43,7 +49,8 @@ class Ship(Entity):
         self.y %= self.SCREEN_HEIGHT
 
     def update(self, asteroids, dt):
-        self._move_ship(dt)
+        pressed_keys = self.controls.handle_keys()
+        self._move_ship(dt, pressed_keys)
         self.sensor.update(asteroids)
 
     def draw(self):

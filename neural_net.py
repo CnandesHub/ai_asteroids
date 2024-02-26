@@ -6,7 +6,7 @@ def sigmoid(x):
 
 
 class NeuralNetwork:
-    def __init__(self, num_layers, activation):
+    def __init__(self, num_layers, activation=sigmoid):
         self.num_layers = num_layers
         self.activation = activation
 
