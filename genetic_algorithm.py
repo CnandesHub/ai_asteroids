@@ -3,11 +3,11 @@ import numpy as np
 
 class DNA:
     def __init__(self, length):
-        self.genes = np.random.uniform(-1, 1, length)  # Initialize genes randomly
+        self.genes = np.random.uniform(-1, 1, length)
 
     def crossover(self, partner):
         child = DNA(len(self.genes))
-        midpoint = np.random.randint(0, len(self.genes))  # Pick a random midpoint
+        midpoint = np.random.randint(0, len(self.genes))
 
         # Crossover
         child.genes[:midpoint] = self.genes[:midpoint]
@@ -18,6 +18,9 @@ class DNA:
         for i in range(len(self.genes)):
             if np.random.rand() < mutation_rate:
                 self.genes[i] = np.random.uniform(-1, 1)
+
+    def get_genes(self):
+        return self.genes
 
 
 class Population:

@@ -10,7 +10,7 @@ class Sensor:
         self.ray_length = 150
         self.ray_angle = 2 * math.pi / self.ray_count
         self.rays = []
-        self.readings = []
+        self.readings = [0] * self.ray_count
 
     def _cast_rays(self):
         self.rays = []
@@ -55,3 +55,6 @@ class Sensor:
             if self.readings[i]:
                 color = (0, 128, 128)
             pygame.draw.line(self.ship.screen, color, ray["start"], ray["end"], 1)
+
+    def sensor(self):
+        return [int(reading) for reading in self.readings]

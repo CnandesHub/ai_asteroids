@@ -6,9 +6,15 @@ def sigmoid(x):
 
 
 class NeuralNetwork:
-    def __init__(self, num_layers, activation=sigmoid):
-        self.num_layers = num_layers
+    def __init__(self, arr_size_layers, activation=sigmoid):
+        self.arr_size_layers = arr_size_layers
         self.activation = activation
+        # self.arr_weight_layers = []
+        self.arr_weight_layers = [
+            np.random.randn(10, 17),
+            np.random.randn(10, 11),
+            np.random.randn(4, 11),
+        ]
 
     @staticmethod
     def start_with_one(arr):
@@ -24,11 +30,14 @@ class NeuralNetwork:
         a_out = activation(z)
         return a_out
 
-    def feed_forward(self, a_in, weights_arrays):
-        output = self.start_with_one(a_in)
-        for i in range(self.num_layers):
-            a_out = self.dense(output, weights_arrays[i], self.activation)
+    def feed_forward(self, a_in):
+        output = self.start_with_one(np.array(a_in))
+        for i in range(len(self.arr_size_layers) - 1):
+            a_out = self.dense(output, self.arr_weight_layers[i], self.activation)
             output = self.start_with_one(a_out)
         output = output[1:]
         self.output = output
         return output
+
+    def set_weights(self, weights):
+        self.arr_weight_layers = weights

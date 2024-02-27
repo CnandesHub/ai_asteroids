@@ -13,7 +13,10 @@ def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Asteroids")
 
-    ship1 = Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 1.5)
+    # ship1 = Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 1.5)
+    ship1 = Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 1.5, control_type="AI")
+    ship2 = Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 1.5, control_type="AI")
+
     astr = Asteroid(screen=screen, x=0, y=0, radius=80, speed=0.5, angle=1.35)
     astr2 = Asteroid(screen=screen, x=200, y=200, radius=45, speed=0, angle=1.35)
 
@@ -34,9 +37,11 @@ def main():
         astr2.draw()
         ship1.update([astr, astr2], dt)
         ship1.draw()
+        ship2.update([astr, astr2], dt)
+        ship2.draw()
 
-        if CollisionEntityCheck.check_collision(ship1, astr):
-            print("Collision detected")
+        # if CollisionEntityCheck.check_collision(ship1, astr):
+        #     print("Collision detected")
 
         pygame.display.flip()
 

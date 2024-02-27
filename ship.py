@@ -4,6 +4,16 @@ import math
 from sensor import Sensor
 from neural_net import NeuralNetwork
 from controls import Controls
+from genetic_algorithm import DNA
+
+# def dna_to_weights(dna, nn_shape):
+#     weights = []
+
+pesos = []
+
+
+def random_weights(nn_shape):
+    weights_arr = []
 
 
 class Ship(Entity):
@@ -15,13 +25,18 @@ class Ship(Entity):
         self.SCREEN_WIDTH = screen.get_width()
         self.SCREEN_HEIGHT = screen.get_height()
         self.max_speed = 10
+        self.alive = True
+        self.time_alive = 0
         self.sensor = Sensor(self)
+        self.controls = Controls(control_type)
         self.use_brain = control_type == "AI"
+        self.brain = None
+        # self.dna = None
+        self.nn_shape = [self.sensor.ray_count, 10, 10, 4]
 
         if self.use_brain:
-            self.brain = NeuralNetwork(self.sensor.ray_count)
-
-        self.controls = Controls()
+            # self.dna = DNA()
+            self.brain = NeuralNetwork(self.nn_shape)
 
     def _move_ship(self, dt, pressed_keys):
         if "forward" in pressed_keys:
@@ -49,7 +64,10 @@ class Ship(Entity):
         self.y %= self.SCREEN_HEIGHT
 
     def update(self, asteroids, dt):
-        pressed_keys = self.controls.handle_keys()
+        brain_output = None
+        if self.use_brain:
+            brain_output = self.brain.feed_forward(self.sensor.sensor())
+        pressed_keys = self.controls.handle_keys(brain_output)
         self._move_ship(dt, pressed_keys)
         self.sensor.update(asteroids)
 
@@ -73,3 +91,7 @@ class Ship(Entity):
                     5,
                 )
         self.sensor.draw()
+
+    # def update_brain_with_dna(self, genes):
+    #     if self.use_brain:
+    #         self.brain.update_dna(genes)
