@@ -1,24 +1,42 @@
 import pygame
+import random
 from ship import Ship
 from asteroid import Asteroid
 from collision_check import CollisionEntityCheck
 
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 1080
+HEIGHT = 720
 TARGET_FPS = 60
 
+asteroid_stages = [
+    {"speed": 2, "radius": 30},
+    {"speed": 1.5, "radius": 50},
+    {"speed": 1, "radius": 80},
+    {"speed": 0.5, "radius": 100},
+]
 
-def main():
+
+def main(num_asteroids, num_ships):
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Asteroids")
 
-    # ship1 = Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 1.5)
-    ship1 = Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 1.5, control_type="AI")
-    ship2 = Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 1.5, control_type="AI")
+    ships = [
+        Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 1.5, control_type="AI")
+        for _ in range(num_ships)
+    ]
 
-    astr = Asteroid(screen=screen, x=0, y=0, radius=80, speed=0.5, angle=1.35)
-    astr2 = Asteroid(screen=screen, x=200, y=200, radius=45, speed=0, angle=1.35)
+    asteroids = []
+    for _ in range(num_asteroids):
+        x = random.randint(0, WIDTH)
+        y = random.randint(0, HEIGHT)
+        stage = random.choice(asteroid_stages)
+        speed = stage["speed"]
+        radius = stage["radius"]
+        angle = random.uniform(0, 2 * 3.14159)
+        asteroids.append(
+            Asteroid(screen=screen, x=x, y=y, radius=radius, speed=speed, angle=angle)
+        )
 
     clock = pygame.time.Clock()
     running = True
@@ -31,17 +49,13 @@ def main():
 
         screen.fill("black")
 
-        astr.update(dt)
-        astr.draw()
-        astr2.update(dt)
-        astr2.draw()
-        ship1.update([astr, astr2], dt)
-        ship1.draw()
-        ship2.update([astr, astr2], dt)
-        ship2.draw()
+        for asteroid in asteroids:
+            asteroid.update(dt)
+            asteroid.draw()
 
-        # if CollisionEntityCheck.check_collision(ship1, astr):
-        #     print("Collision detected")
+        for ship in ships:
+            ship.update(asteroids, dt)
+            ship.draw()
 
         pygame.display.flip()
 
@@ -51,4 +65,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    num_asteroids = 6  # Specify number of asteroids
+    num_ships = 10  # Specify number of ships
+    main(num_asteroids, num_ships)

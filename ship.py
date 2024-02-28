@@ -5,15 +5,11 @@ from sensor import Sensor
 from neural_net import NeuralNetwork
 from controls import Controls
 from genetic_algorithm import DNA
-
-# def dna_to_weights(dna, nn_shape):
-#     weights = []
-
-pesos = []
+import numpy as np
 
 
-def random_weights(nn_shape):
-    weights_arr = []
+def calc_size_dna(nn_shape):
+    return sum(x * y for x, y in zip(nn_shape, nn_shape[1:]))
 
 
 class Ship(Entity):
@@ -31,12 +27,14 @@ class Ship(Entity):
         self.controls = Controls(control_type)
         self.use_brain = control_type == "AI"
         self.brain = None
-        # self.dna = None
+        self.dna = None
         self.nn_shape = [self.sensor.ray_count, 10, 10, 4]
 
         if self.use_brain:
-            # self.dna = DNA()
+            self.dna = DNA(calc_size_dna(self.nn_shape))
             self.brain = NeuralNetwork(self.nn_shape)
+            weights = self.get_resized_arrays(self.dna.get_genes())
+            self.brain.set_weights(weights)
 
     def _move_ship(self, dt, pressed_keys):
         if "forward" in pressed_keys:
@@ -70,6 +68,8 @@ class Ship(Entity):
         pressed_keys = self.controls.handle_keys(brain_output)
         self._move_ship(dt, pressed_keys)
         self.sensor.update(asteroids)
+        if self.alive:
+            self.time_alive += dt
 
     def draw(self):
         for y in range(-1, 2):
@@ -95,3 +95,14 @@ class Ship(Entity):
     # def update_brain_with_dna(self, genes):
     #     if self.use_brain:
     #         self.brain.update_dna(genes)
+
+    def get_resized_arrays(self, genes):
+        resized_arrays = []
+        genes_index = 0
+        for i in range(len(self.nn_shape) - 1):
+            shape = (self.nn_shape[i + 1], self.nn_shape[i])
+            array_size = np.prod(shape)
+            array_data = genes[genes_index : genes_index + array_size].reshape(shape)
+            resized_arrays.append(array_data)
+            genes_index += array_size
+        return resized_arrays
