@@ -5,6 +5,7 @@ from sensor import Sensor
 from neural_net import NeuralNetwork
 from controls import Controls
 from genetic_algorithm import DNA
+from collision_check import CollisionEntityCheck
 import numpy as np
 
 
@@ -33,7 +34,7 @@ class Ship(Entity):
         if self.use_brain:
             self.dna = DNA(calc_size_dna(self.nn_shape))
             self.brain = NeuralNetwork(self.nn_shape)
-            weights = self.get_resized_arrays(self.dna.get_genes())
+            weights = self._get_resized_arrays(self.dna.get_genes())
             self.brain.set_weights(weights)
 
     def _move_ship(self, dt, pressed_keys):
@@ -62,16 +63,22 @@ class Ship(Entity):
         self.y %= self.SCREEN_HEIGHT
 
     def update(self, asteroids, dt):
+        if not self.alive:
+            return
+        collided = self._check_collision(asteroids)
+        if collided:
+            return
         brain_output = None
         if self.use_brain:
             brain_output = self.brain.feed_forward(self.sensor.sensor())
         pressed_keys = self.controls.handle_keys(brain_output)
         self._move_ship(dt, pressed_keys)
         self.sensor.update(asteroids)
-        if self.alive:
-            self.time_alive += dt
+        self.time_alive += dt
 
     def draw(self):
+        if not self.alive:
+            return
         for y in range(-1, 2):
             for x in range(-1, 2):
                 offset_x = x * self.SCREEN_WIDTH
@@ -92,11 +99,7 @@ class Ship(Entity):
                 )
         self.sensor.draw()
 
-    # def update_brain_with_dna(self, genes):
-    #     if self.use_brain:
-    #         self.brain.update_dna(genes)
-
-    def get_resized_arrays(self, genes):
+    def _get_resized_arrays(self, genes):
         resized_arrays = []
         genes_index = 0
         for i in range(len(self.nn_shape) - 1):
@@ -106,3 +109,10 @@ class Ship(Entity):
             resized_arrays.append(array_data)
             genes_index += array_size
         return resized_arrays
+
+    def _check_collision(self, entities):
+        for entity in entities:
+            collision = CollisionEntityCheck.check_collision(self, entity)
+            if collision:
+                self.alive = False
+                return True
