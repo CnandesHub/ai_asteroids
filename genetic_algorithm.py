@@ -24,19 +24,21 @@ class DNA:
 
 
 class Population:
-    def __init__(self, pop_size, mutation_rate):
-        self.population = [DNA(length=10) for _ in range(pop_size)]
+    def __init__(self, mutation_rate, population, scores):
+        # self.population = [DNA(length=10) for _ in range(population_size)]
+        # population is a tuple containing DNA and its score (DNA, score)
+        self.population = population
+        self.scores = scores
         self.mutation_rate = mutation_rate
 
     def evolve(self):
         new_generation = []
 
         # Calculate fitness
-        fitness_scores = [
-            self.calculate_fitness(individual) for individual in self.population
-        ]
+        fitness_scores = [score**2 for score in self.scores]
         max_fitness = max(fitness_scores)
-        print("Max Fitness:", max_fitness)
+        if max_fitness == 0:
+            return
 
         # Normalize fitness scores
         normalized_fitness = [score / max_fitness for score in fitness_scores]
@@ -63,5 +65,5 @@ class Population:
         index -= 1
         return self.population[index]
 
-    def calculate_fitness(self, individual):
-        pass
+    # def calculate_fitness(self, individual):
+    #     pass

@@ -30,4 +30,4 @@ class Asteroid(Entity):
                 offset_y = y * self.SCREEN_HEIGHT
 
                 circle_center = (self.x + offset_x, self.y + offset_y)
-                pygame.draw.circle(self.screen, (255, 0, 0), circle_center, self.radius)
+                pygame.draw.circle(self.screen, (0, 255, 0), circle_center, self.radius)

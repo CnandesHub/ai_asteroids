@@ -116,3 +116,7 @@ class Ship(Entity):
             if collision:
                 self.alive = False
                 return True
+
+    def revive(self):
+        self.alive = True
+        self.time_alive = 0
