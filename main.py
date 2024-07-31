@@ -10,7 +10,7 @@ TARGET_FPS = 60
 
 asteroid_stages = [
     # {"speed": 1.8, "radius": 30},
-    {"speed": 1.5, "radius": 50},
+    # {"speed": 1.5, "radius": 50},
     {"speed": 1, "radius": 80},
     {"speed": 0.5, "radius": 100},
 ]
@@ -28,8 +28,8 @@ def main(num_asteroids, num_ships):
 
     asteroids = []
     for _ in range(num_asteroids):
-        x = random.randint(0, WIDTH)
-        y = random.randint(0, HEIGHT)
+        x = random.randint(50, WIDTH / 2) * random.choice([-1, 1])
+        y = random.randint(50, HEIGHT / 2) * random.choice([-1, 1])
         stage = random.choice(asteroid_stages)
         speed = stage["speed"]
         radius = stage["radius"]
@@ -97,6 +97,6 @@ def main(num_asteroids, num_ships):
 
 
 if __name__ == "__main__":
-    num_asteroids = 10  # Specify number of asteroids
+    num_asteroids = 7  # Specify number of asteroids
     num_ships = 1000  # Specify number of ships
     main(num_asteroids, num_ships)

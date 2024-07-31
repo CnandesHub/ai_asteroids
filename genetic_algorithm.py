@@ -1,4 +1,6 @@
 import numpy as np
+from utils import lerp
+from copy import copy
 
 
 class DNA:
@@ -16,8 +18,9 @@ class DNA:
 
     def mutate(self, mutation_rate):
         for i in range(len(self.genes)):
-            if np.random.rand() < mutation_rate:
-                self.genes[i] = np.random.uniform(-1, 1)
+            self.genes[i] = lerp(self.genes[i], np.random.uniform(-1, 1), mutation_rate)
+            # if np.random.rand() < mutation_rate:
+            #     self.genes[i] = np.random.uniform(-1, 1)
 
     def get_genes(self):
         return self.genes
@@ -25,36 +28,45 @@ class DNA:
 
 class Population:
     def __init__(self, mutation_rate, population, scores):
-        # self.population = [DNA(length=10) for _ in range(population_size)]
-        # population is a tuple containing DNA and its score (DNA, score)
         self.population = population
         self.scores = scores
         self.mutation_rate = mutation_rate
+        self.best_individual = None
+        self.best_score = float("-inf")
 
     def evolve(self):
         new_generation = []
 
         # Calculate fitness
-        fitness_scores = [score**2 for score in self.scores]
-        max_fitness = max(fitness_scores)
-        if max_fitness == 0:
+        fitness_scores = self.scores
+        sum_fitness = sum(fitness_scores)
+        if sum_fitness == 0:
             return
 
         # Normalize fitness scores
-        normalized_fitness = [score / max_fitness for score in fitness_scores]
+        normalized_fitness = [score / sum_fitness for score in fitness_scores]
+
+        # Find the best individual in the population
+        best_index = np.argmax(self.scores)
+        best_individual = self.population[best_index]
+        best_score = self.scores[best_index]
+
+        # Keep the best individuals in the population
+        # new_generation.append(best_individual)
+        num_best_individuals = int(len(self.population) * 0.3)
+        sorted_indices = np.argsort(self.scores)[::-1][:num_best_individuals]
+        for index in sorted_indices:
+            new_generation.append(self.population[index])
 
         # Create new generation using roulette wheel selection
-        for _ in range(len(self.population)):
-            # Select two parents based on their fitness
-            parent1 = self.roulette_wheel_selection(normalized_fitness)
-            parent2 = self.roulette_wheel_selection(normalized_fitness)
-
-            # Crossover and mutate to create child
-            child = parent1.crossover(parent2)
-            child.mutate(self.mutation_rate)
-            new_generation.append(child)
+        for _ in range(len(self.population) - num_best_individuals):
+            individual = self.roulette_wheel_selection(normalized_fitness)
+            individual.mutate(self.mutation_rate)
+            new_generation.append(individual)
 
         self.population = new_generation
+        self.best_individual = best_individual
+        self.best_score = best_score
 
     def roulette_wheel_selection(self, normalized_fitness):
         index = 0
@@ -63,7 +75,4 @@ class Population:
             r -= normalized_fitness[index]
             index += 1
         index -= 1
-        return self.population[index]
-
-    # def calculate_fitness(self, individual):
-    #     pass
+        return copy(self.population[index])

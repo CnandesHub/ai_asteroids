@@ -6,7 +6,7 @@ from utils import distance_point_line
 class Sensor:
     def __init__(self, ship):
         self.ship = ship
-        self.ray_count = 16
+        self.ray_count = 8
         self.ray_length = 150
         self.ray_angle = 2 * math.pi / self.ray_count
         self.rays = []
@@ -19,8 +19,8 @@ class Sensor:
         for i in range(self.ray_count):
             angle = self.ray_angle * i
             end = (
-                ship_x + self.ray_length * math.cos(angle),
-                ship_y + self.ray_length * math.sin(angle),
+                ship_x + self.ray_length * math.cos(angle + self.ship.angle),
+                ship_y + self.ray_length * math.sin(angle + self.ship.angle),
             )
 
             self.rays.append({"start": start, "end": end})
