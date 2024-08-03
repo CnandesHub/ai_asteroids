@@ -14,11 +14,10 @@ def calc_size_dna(nn_shape):
 
 
 class Ship(Entity):
-    TURN_SPEED = 2
+    TURN_SPEED = 4
 
-    def __init__(self, screen, x, y, radius, acceleration, control_type="Player"):
+    def __init__(self, screen, x, y, radius, control_type="Player"):
         super().__init__(screen, x, y, radius)
-        self.acceleration = acceleration
         self.SCREEN_WIDTH = screen.get_width()
         self.SCREEN_HEIGHT = screen.get_height()
         self.max_speed = 10
@@ -41,16 +40,14 @@ class Ship(Entity):
         self.speed_y = 0
         self.angle = 0
         self.TARGET_FPS = 60
-        # self.friction = 0.05  # Coeficiente de atrito
-        self.player_max_speed = 20
-        self.player_max_rtspd = 10
-        self.fd_fric = 0.2
-        self.bd_fric = 0.2
+        self.player_max_speed = 9
+        self.fd_fric = 0.5
+        self.bd_fric = 0.1
 
     def _move_ship(self, dt, pressed_keys):
         speed = math.sqrt(self.speed_x**2 + self.speed_y**2)
 
-        # Movimento para frente
+        # If BOOST
         if "forward" in pressed_keys:
             if speed + self.fd_fric < self.player_max_speed:
                 self.speed_x += self.fd_fric * math.cos(self.angle)

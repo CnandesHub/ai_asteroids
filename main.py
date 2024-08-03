@@ -10,26 +10,27 @@ TARGET_FPS = 60
 
 # Exclusion zone properties
 EXCLUSION_ZONE_SIZE = 50
+SHIP_SIZE = 20
 
 
 # Function to generate random coordinates outside the exclusion zone
 def get_random_position():
     place = random.choice(["L", "R", "B", "T"])
     if place == "L":
-        x = random.randint(0, WIDTH // 2 - 50)
+        x = random.randint(0, WIDTH // 2 - EXCLUSION_ZONE_SIZE)
         y = random.randint(0, HEIGHT)
         return x, y
     elif place == "R":
-        x = random.randint(WIDTH // 2 + 50, WIDTH)
+        x = random.randint(WIDTH // 2 + EXCLUSION_ZONE_SIZE, WIDTH)
         y = random.randint(0, HEIGHT)
         return x, y
     elif place == "B":
         x = random.randint(0, WIDTH)
-        y = random.randint(HEIGHT // 2 + 50, HEIGHT)
+        y = random.randint(HEIGHT // 2 + EXCLUSION_ZONE_SIZE, HEIGHT)
         return x, y
     elif place == "T":
         x = random.randint(0, WIDTH)
-        y = random.randint(0, HEIGHT // 2 - 50)
+        y = random.randint(0, HEIGHT // 2 - EXCLUSION_ZONE_SIZE)
         return x, y
 
 
@@ -41,7 +42,7 @@ def generate_asteroids(num_asteroids, screen):
     for _ in range(num_asteroids):
         x, y = get_random_position()
         radius = random.choice(asteroid_stages)
-        speed = random.uniform(1, (40 - radius) * 4 / 15)
+        speed = random.uniform(1, (40 - radius) * 4 / 20)
         angle = random.uniform(0, 2 * 3.14159)
         asteroids.append(
             Asteroid(screen=screen, x=x, y=y, radius=radius, speed=speed, angle=angle)
@@ -58,7 +59,7 @@ def main(num_asteroids, num_ships):
     pygame.display.set_caption("Asteroids")
 
     ships = [
-        Ship(screen, WIDTH / 2, HEIGHT / 2, 20, 0.5, control_type="AI")
+        Ship(screen, WIDTH / 2, HEIGHT / 2, SHIP_SIZE, control_type="AI")
         for _ in range(num_ships)
     ]
 
@@ -95,9 +96,13 @@ def main(num_asteroids, num_ships):
             pop = Population(0.2, ship_dna_list, ship_time_alive_list)
             pop.evolve()
             new_generation = pop.population
+            ships = [
+                Ship(screen, WIDTH / 2, HEIGHT / 2, SHIP_SIZE, control_type="AI")
+                for _ in range(num_ships)
+            ]
             for generation, ship in zip(new_generation, ships):
                 ship.dna = generation
-                ship.revive()
+                # ship.revive()
             generation_count += 1
             print(generation_count)
             alive = True
@@ -111,6 +116,6 @@ def main(num_asteroids, num_ships):
 
 
 if __name__ == "__main__":
-    num_asteroids = 7  # Specify number of asteroids
-    num_ships = 200  # Specify number of ships
+    num_asteroids = 8  # Specify number of asteroids
+    num_ships = 500  # Specify number of ships
     main(num_asteroids, num_ships)
