@@ -33,29 +33,23 @@ def get_random_position():
         return x, y
 
 
+asteroid_stages = [10, 20, 30]
+
+
 def generate_asteroids(num_asteroids, screen):
     asteroids = []
     for _ in range(num_asteroids):
         x, y = get_random_position()
-        stage = random.choice(asteroid_stages)
-        speed = stage["speed"]
-        radius = stage["radius"]
+        radius = random.choice(asteroid_stages)
+        speed = random.uniform(1, (40 - radius) * 4 / 15)
         angle = random.uniform(0, 2 * 3.14159)
         asteroids.append(
             Asteroid(screen=screen, x=x, y=y, radius=radius, speed=speed, angle=angle)
         )
     asteroids.append(
-        Asteroid(screen=screen, x=150, y=20, radius=80, speed=1, angle=1.75 * 3.14159)
+        Asteroid(screen=screen, x=150, y=20, radius=30, speed=1, angle=1.75 * 3.14159)
     )
     return asteroids
-
-
-asteroid_stages = [
-    # {"speed": 1.8, "radius": 30},
-    # {"speed": 1.5, "radius": 50},
-    {"speed": 1, "radius": 80},
-    {"speed": 0.5, "radius": 100},
-]
 
 
 def main(num_asteroids, num_ships):
@@ -64,7 +58,7 @@ def main(num_asteroids, num_ships):
     pygame.display.set_caption("Asteroids")
 
     ships = [
-        Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 0.5, control_type="AI")
+        Ship(screen, WIDTH / 2, HEIGHT / 2, 20, 0.5, control_type="AI")
         for _ in range(num_ships)
     ]
 

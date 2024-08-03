@@ -29,7 +29,7 @@ class Ship(Entity):
         self.use_brain = control_type == "AI"
         self.brain = None
         self.dna = None
-        self.nn_shape = [self.sensor.ray_count, 30, 30, 4]
+        self.nn_shape = [self.sensor.ray_count, 30, 30, 3]
 
         if self.use_brain:
             self.dna = DNA(calc_size_dna(self.nn_shape))
@@ -37,24 +37,48 @@ class Ship(Entity):
             weights = self._get_resized_arrays(self.dna.get_genes())
             self.brain.set_weights(weights)
 
+        self.speed_x = 0
+        self.speed_y = 0
+        self.angle = 0
+        self.TARGET_FPS = 60
+        # self.friction = 0.05  # Coeficiente de atrito
+        self.player_max_speed = 20
+        self.player_max_rtspd = 10
+        self.fd_fric = 0.2
+        self.bd_fric = 0.2
+
     def _move_ship(self, dt, pressed_keys):
+        speed = math.sqrt(self.speed_x**2 + self.speed_y**2)
+
+        # Movimento para frente
         if "forward" in pressed_keys:
-            self.speed_x += math.cos(self.angle) * self.acceleration * dt
-            self.speed_y += math.sin(self.angle) * self.acceleration * dt
-        if "backward" in pressed_keys:
-            self.speed_x -= math.cos(self.angle) * self.acceleration * dt
-            self.speed_y -= math.sin(self.angle) * self.acceleration * dt
+            if speed + self.fd_fric < self.player_max_speed:
+                self.speed_x += self.fd_fric * math.cos(self.angle)
+                self.speed_y += self.fd_fric * math.sin(self.angle)
+            else:
+                self.speed_x = self.player_max_speed * math.cos(self.angle)
+                self.speed_y = self.player_max_speed * math.sin(self.angle)
+        else:
+            if speed - self.bd_fric > 0:
+                self.speed_x -= self.bd_fric * math.cos(
+                    math.atan2(self.speed_y, self.speed_x)
+                )
+                self.speed_y -= self.bd_fric * math.sin(
+                    math.atan2(self.speed_y, self.speed_x)
+                )
+            else:
+                self.speed_x = 0
+                self.speed_y = 0
+
+        # Rotação da nave
         if "right" in pressed_keys:
             self.angle += self.TURN_SPEED * dt
-        if "left" in pressed_keys:
+        elif "left" in pressed_keys:
             self.angle -= self.TURN_SPEED * dt
 
         self.angle %= 2 * math.pi
-        hipotenusa = math.sqrt(self.speed_x**2 + self.speed_y**2)
-        if hipotenusa > self.max_speed:
-            self.speed_x = self.speed_x / hipotenusa * self.max_speed
-            self.speed_y = self.speed_y / hipotenusa * self.max_speed
 
+        # Atualizar a posição
         dx = self.speed_x * dt * self.TARGET_FPS
         dy = self.speed_y * dt * self.TARGET_FPS
         self.x += dx

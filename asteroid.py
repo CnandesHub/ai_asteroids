@@ -7,16 +7,18 @@ class Asteroid(Entity):
 
     def __init__(self, screen, x, y, radius, speed, angle):
         super().__init__(screen, x, y, radius)
-        self.speed_x = speed * math.cos(angle)
-        self.speed_y = speed * math.sin(angle)
+        # self.speed_x = speed * math.cos(angle)
+        # self.speed_y = speed * math.sin(angle)
+        self.speed = speed
+        self.angle = angle
         self.SCREEN_WIDTH = screen.get_width()
         self.SCREEN_HEIGHT = screen.get_height()
         self.max_speed = 10
 
     def update(self, dt):
 
-        dx = self.speed_x * dt * self.TARGET_FPS
-        dy = self.speed_y * dt * self.TARGET_FPS
+        dx = self.speed * math.cos(self.angle) * dt * self.TARGET_FPS
+        dy = self.speed * math.sin(self.angle) * dt * self.TARGET_FPS
         self.x += dx
         self.y += dy
         self.x %= self.SCREEN_WIDTH

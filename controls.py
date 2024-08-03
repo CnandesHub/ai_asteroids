@@ -23,7 +23,7 @@ class Controls:
 
     def handle_keys_ai(self, brain_output, threshold=0.2):
 
-        actions = ["forward", "backward", "right", "left"]
+        actions = ["forward", "right", "left"]
         max_index = np.argmax(brain_output)
 
         if brain_output[max_index] < threshold:
