@@ -14,7 +14,7 @@ def calc_size_dna(nn_shape):
 
 
 class Ship(Entity):
-    TURN_SPEED = 10
+    TURN_SPEED = 2
 
     def __init__(self, screen, x, y, radius, acceleration, control_type="Player"):
         super().__init__(screen, x, y, radius)

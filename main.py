@@ -8,6 +8,31 @@ WIDTH = 1080
 HEIGHT = 720
 TARGET_FPS = 60
 
+# Exclusion zone properties
+EXCLUSION_ZONE_SIZE = 50
+
+
+# Function to generate random coordinates outside the exclusion zone
+def get_random_position():
+    place = random.choice(["L", "R", "B", "T"])
+    if place == "L":
+        x = random.randint(0, WIDTH // 2 - 50)
+        y = random.randint(0, HEIGHT)
+        return x, y
+    elif place == "R":
+        x = random.randint(WIDTH // 2 + 50, WIDTH)
+        y = random.randint(0, HEIGHT)
+        return x, y
+    elif place == "B":
+        x = random.randint(0, WIDTH)
+        y = random.randint(HEIGHT // 2 + 50, HEIGHT)
+        return x, y
+    elif place == "T":
+        x = random.randint(0, WIDTH)
+        y = random.randint(0, HEIGHT // 2 - 50)
+        return x, y
+
+
 asteroid_stages = [
     # {"speed": 1.8, "radius": 30},
     # {"speed": 1.5, "radius": 50},
@@ -22,14 +47,13 @@ def main(num_asteroids, num_ships):
     pygame.display.set_caption("Asteroids")
 
     ships = [
-        Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 1.5, control_type="AI")
+        Ship(screen, WIDTH / 2, HEIGHT / 2, 30, 0.5, control_type="AI")
         for _ in range(num_ships)
     ]
 
     asteroids = []
     for _ in range(num_asteroids):
-        x = random.randint(50, WIDTH / 2) * random.choice([-1, 1])
-        y = random.randint(50, HEIGHT / 2) * random.choice([-1, 1])
+        x, y = get_random_position()
         stage = random.choice(asteroid_stages)
         speed = stage["speed"]
         radius = stage["radius"]
@@ -77,8 +101,7 @@ def main(num_asteroids, num_ships):
             alive = True
             asteroids = []
             for _ in range(num_asteroids):
-                x = random.randint(0, WIDTH)
-                y = random.randint(0, HEIGHT)
+                x, y = get_random_position()
                 stage = random.choice(asteroid_stages)
                 speed = stage["speed"]
                 radius = stage["radius"]
