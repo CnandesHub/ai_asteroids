@@ -33,6 +33,23 @@ def get_random_position():
         return x, y
 
 
+def generate_asteroids(num_asteroids, screen):
+    asteroids = []
+    for _ in range(num_asteroids):
+        x, y = get_random_position()
+        stage = random.choice(asteroid_stages)
+        speed = stage["speed"]
+        radius = stage["radius"]
+        angle = random.uniform(0, 2 * 3.14159)
+        asteroids.append(
+            Asteroid(screen=screen, x=x, y=y, radius=radius, speed=speed, angle=angle)
+        )
+    asteroids.append(
+        Asteroid(screen=screen, x=150, y=20, radius=80, speed=1, angle=1.75 * 3.14159)
+    )
+    return asteroids
+
+
 asteroid_stages = [
     # {"speed": 1.8, "radius": 30},
     # {"speed": 1.5, "radius": 50},
@@ -51,16 +68,7 @@ def main(num_asteroids, num_ships):
         for _ in range(num_ships)
     ]
 
-    asteroids = []
-    for _ in range(num_asteroids):
-        x, y = get_random_position()
-        stage = random.choice(asteroid_stages)
-        speed = stage["speed"]
-        radius = stage["radius"]
-        angle = random.uniform(0, 2 * 3.14159)
-        asteroids.append(
-            Asteroid(screen=screen, x=x, y=y, radius=radius, speed=speed, angle=angle)
-        )
+    asteroids = generate_asteroids(num_asteroids, screen)
 
     clock = pygame.time.Clock()
     running = True
@@ -99,18 +107,7 @@ def main(num_asteroids, num_ships):
             generation_count += 1
             print(generation_count)
             alive = True
-            asteroids = []
-            for _ in range(num_asteroids):
-                x, y = get_random_position()
-                stage = random.choice(asteroid_stages)
-                speed = stage["speed"]
-                radius = stage["radius"]
-                angle = random.uniform(0, 2 * 3.14159)
-                asteroids.append(
-                    Asteroid(
-                        screen=screen, x=x, y=y, radius=radius, speed=speed, angle=angle
-                    )
-                )
+            asteroids = generate_asteroids(num_asteroids, screen)
 
         pygame.display.flip()
 
@@ -121,5 +118,5 @@ def main(num_asteroids, num_ships):
 
 if __name__ == "__main__":
     num_asteroids = 7  # Specify number of asteroids
-    num_ships = 1000  # Specify number of ships
+    num_ships = 200  # Specify number of ships
     main(num_asteroids, num_ships)

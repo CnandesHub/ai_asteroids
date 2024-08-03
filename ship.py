@@ -29,7 +29,7 @@ class Ship(Entity):
         self.use_brain = control_type == "AI"
         self.brain = None
         self.dna = None
-        self.nn_shape = [self.sensor.ray_count, 10, 10, 4]
+        self.nn_shape = [self.sensor.ray_count, 30, 30, 4]
 
         if self.use_brain:
             self.dna = DNA(calc_size_dna(self.nn_shape))
