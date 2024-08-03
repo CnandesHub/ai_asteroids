@@ -98,7 +98,7 @@ def main(num_asteroids, num_ships):
         if not alive:
             ship_data = [(ship.dna, ship.time_alive) for ship in ships]
             ship_dna_list, ship_time_alive_list = zip(*ship_data)
-            pop = Population(0.1, ship_dna_list, ship_time_alive_list)
+            pop = Population(0.2, ship_dna_list, ship_time_alive_list)
             pop.evolve()
             new_generation = pop.population
             for generation, ship in zip(new_generation, ships):

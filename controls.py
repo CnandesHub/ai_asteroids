@@ -1,4 +1,5 @@
 import pygame
+import numpy as np
 
 
 class Controls:
@@ -20,19 +21,24 @@ class Controls:
             pressed_keys.append("left")
         return pressed_keys
 
-    def handle_keys_ai(self, brain_output, threshold=0.5):
-        pressed_keys = []
+    def handle_keys_ai(self, brain_output, threshold=0.2):
+
         actions = ["forward", "backward", "right", "left"]
+        max_index = np.argmax(brain_output)
 
-        for i in range(len(brain_output)):
-            if brain_output[i] > threshold:
-                pressed_keys.append(actions[i])
+        if brain_output[max_index] < threshold:
+            return []
+        # pressed_keys.append()
 
-        return pressed_keys
+        # for i in range(len(brain_output)):
+        #     if brain_output[i] > threshold:
+        #         pressed_keys.append(actions[i])
+
+        return [actions[max_index]]
 
     def handle_keys(self, brain_output=None):
         if self.control_type == "Player":
             return self.handle_keys_player()
         if self.control_type == "AI":
             return self.handle_keys_ai(brain_output)
-        return [False, False, False, False]
+        return []
